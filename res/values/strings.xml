@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">YubiKeyNEO DEMO</string>
+    <string name="provide_nfc">Provide YubiKey NEO</string>
+    <string name="no_neo">Not a YubiKey NEO</string>
+    <string name="otp_received">OTP received</string>
+    <string name="show_otp">Show OTP on screen</string>
+    <string name="copy_to_clipboard">Copy OTP to clipboard</string>
+    <string name="copied_to_clipboard">OTP copied to clipboard</string>
+    <string name="ok">OK</string>
+    <string name="yubikey_demo">Yubico demo site</string>
+</resources>
