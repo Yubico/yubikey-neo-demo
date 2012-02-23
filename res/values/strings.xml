@@ -9,4 +9,10 @@
     <string name="copied_to_clipboard">OTP copied to clipboard</string>
     <string name="ok">OK</string>
     <string name="yubikey_demo">Yubico demo site</string>
+    <string name="yubicloud_verify">Verify with YubiCloud</string>
+    <string name="yubicloud_failed">OTP verification with YubiCloud failed</string>
+    <string name="otp_missmatch">OTP returned is not the same as the one sent, man in the middle?</string>
+    <string name="yubicloud_ok">Verification with YubiCloud OK</string>
+    <string name="otp">OTP:</string>
+    <string name="counter">counter:</string>
 </resources>

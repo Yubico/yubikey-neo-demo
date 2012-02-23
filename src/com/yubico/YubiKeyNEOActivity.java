@@ -1,7 +1,12 @@
 package com.yubico;
 
+import java.net.ResponseCache;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.yubico.client.v2.YubicoClient;
+import com.yubico.client.v2.YubicoResponse;
+import com.yubico.client.v2.YubicoResponseStatus;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -42,13 +47,13 @@ public class YubiKeyNEOActivity extends Activity {
 
     public void onResume() {
     	super.onResume();
-    	Log.e(logName, "resume..");
     	PendingIntent pendingIntent = PendingIntent.getActivity(
     			this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
     	IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
     	ndef.addDataScheme("http");
-    	ndef.addDataAuthority("demo.yubico.com", null);
-    	IntentFilter[] intentFiltersArray = new IntentFilter[] {ndef};
+    	IntentFilter ndefHttps = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
+    	ndef.addDataScheme("https");
+    	IntentFilter[] intentFiltersArray = new IntentFilter[] {ndef, ndefHttps};
     	NfcAdapter.getDefaultAdapter(this).enableForegroundDispatch(this, pendingIntent, intentFiltersArray, null);
     }
 
@@ -76,6 +81,7 @@ public class YubiKeyNEOActivity extends Activity {
 		menu.add(0, 0, 0, R.string.copy_to_clipboard);
 		menu.add(0, 1, 1, R.string.show_otp);
 		menu.add(0, 2, 2, R.string.yubikey_demo);
+		menu.add(0, 3, 3, R.string.yubicloud_verify);
 		super.onCreateContextMenu(menu, v, menuInfo);
 	}
 	
@@ -90,7 +96,7 @@ public class YubiKeyNEOActivity extends Activity {
 			Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show();
 			break;
 		case 1:
-			showDialog(otp);
+			showOTPDialog(otp);
 			break;
 		case 2:
 			String url = "http://demo.yubico.com/php-yubico/one_factor.php?key=" + otp;
@@ -98,14 +104,63 @@ public class YubiKeyNEOActivity extends Activity {
 			i.setData(Uri.parse(url));
 			startActivity(i);
 			break;
+		case 3:
+			YubicoClient client = YubicoClient.getClient(7364);
+			YubicoResponse response = client.verify(otp);
+			if(response.getStatus() == YubicoResponseStatus.OK) {
+				if(response.getOtp().equals(otp)) {
+					showCloudDialog(response);
+				} else {
+					Toast.makeText(this, R.string.otp_missmatch, Toast.LENGTH_LONG).show();
+				}
+			} else {
+				Toast.makeText(this, R.string.yubicloud_failed, Toast.LENGTH_LONG).show();
+			}
+			break;
 		}
 		
 		
 		return super.onContextItemSelected(item);
 	}
+	
+	private void showCloudDialog(YubicoResponse response) {
+		AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		// Set an EditText view to get user input
+		View input = View.inflate(this, R.layout.cloud_display, null);
 
-	private void showDialog(String otp) {
-		String displayOTP = "";
+		TextView otp_view = (TextView) input.findViewById(R.id.otp1);
+		otp_view.setText(formatOTP(response.getOtp()));
+		TextView counter1 = (TextView) input.findViewById(R.id.counter1);
+		counter1.setText(response.getSessioncounter());
+		alert.setView(input);
+		alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog,
+					int whichButton) {
+				dialog.cancel();
+			}
+		});
+		alert.show();
+	}
+
+	private void showOTPDialog(String otp) {
+		AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		// Set an EditText view to get user input
+		final TextView input = (TextView) TextView.inflate(this,
+				R.layout.otp_display, null);
+
+		input.setText(formatOTP(otp));
+		alert.setView(input);
+		alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog,
+					int whichButton) {
+				dialog.cancel();
+			}
+		});
+		alert.show();
+	}
+
+	private String formatOTP(String otp) {
+		String displayOTP = new String();
 		for (int i = 0; i < otp.length();) {
 			if (i == 12 || i == 26) {
 				displayOTP += otp.substring(i, i + 2) + "  ";
@@ -117,21 +172,6 @@ public class YubiKeyNEOActivity extends Activity {
 				i += 4;
 			}
 		}
-
-		AlertDialog.Builder alert = new AlertDialog.Builder(this);
-		// Set an EditText view to get user input
-		final TextView input = (TextView) TextView.inflate(this,
-				R.layout.otp_display, null);
-
-		input.setText(displayOTP);
-		alert.setView(input);
-		alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog,
-					int whichButton) {
-				dialog.cancel();
-			}
-		});
-
-		alert.show();
+		return displayOTP;
 	}
 }
