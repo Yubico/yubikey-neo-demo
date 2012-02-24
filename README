@@ -1,0 +1,4 @@
+This is an example app showing how you can work with the NFC YubiKeyNEO.
+
+It uses Maven3 for building, so to build issue mvn3 package and you get an
+apk in the target directory.
