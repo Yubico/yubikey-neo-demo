@@ -56,6 +56,7 @@ import com.yubico.client.v2.YubicoResponse;
 
 public class YubiKeyNEOActivity extends Activity {
 	private static final String logName = "YubiKeyNEOActivity";
+	// compile a pattern that matches a 44 characters modhex at the end of the tag
 	private static final Pattern otpPattern = Pattern.compile("^.*([cbdefghijklnrtuv]{44})$");
 	private String otp = null;
 
@@ -73,6 +74,7 @@ public class YubiKeyNEOActivity extends Activity {
     
     public void onPause() {
         super.onPause();
+        // disable foreground dispatch when we're paused
         NfcAdapter.getDefaultAdapter(this).disableForegroundDispatch(this);
     }
 
@@ -80,19 +82,23 @@ public class YubiKeyNEOActivity extends Activity {
         super.onResume();
     	PendingIntent pendingIntent = PendingIntent.getActivity(
     			this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+    	// register for all NDEF tags starting with http och https
     	IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
     	ndef.addDataScheme("http");
     	IntentFilter ndefHttps = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
     	ndef.addDataScheme("https");
     	IntentFilter[] intentFiltersArray = new IntentFilter[] {ndef, ndefHttps};
+    	// register for foreground dispatch so we'll receive tags according to our intent filters
     	NfcAdapter.getDefaultAdapter(this).enableForegroundDispatch(this, pendingIntent, intentFiltersArray, null);
     }
 
     public void onNewIntent(Intent intent) {
+    	// get the actual URI from the ndef tag
     	String data = intent.getDataString();
         Log.d(logName, "data: " + data);
         Matcher matcher = otpPattern.matcher(data);
         if(matcher.matches()) {
+        	// if the otp matched our regex open up a contextmenu
         	otp = matcher.group(1);
         	View view = findViewById(R.id.text1);
         	registerForContextMenu(view);
@@ -120,22 +126,22 @@ public class YubiKeyNEOActivity extends Activity {
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
-		case COPY_TO_CLIPBOARD:
+		case COPY_TO_CLIPBOARD: // copy the OTP to clipboard
 			ClipboardManager clipboard = (ClipboardManager) this.getSystemService(Context.CLIPBOARD_SERVICE);
 			clipboard.setText(otp);
 			Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show();
 			break;
-		case SHOW_OTP:
+		case SHOW_OTP: // show a dialog with the OTP displayed
 			showOTPDialog(otp);
 			break;
-		case YUBIKEY_DEMO:
+		case YUBIKEY_DEMO: // start an intent for the browser with the yubico demo site + the OTP
 			String url = "http://demo.yubico.com/php-yubico/one_factor.php?key=" + otp;
 			Intent i = new Intent(Intent.ACTION_VIEW);
 			i.setData(Uri.parse(url));
 			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(i);
 			break;
-		case YUBICLOUD_VERIFY:
+		case YUBICLOUD_VERIFY: // do verification of the OTP to the YubiCloud platform directly
 			YubicoClient client = YubicoClient.getClient(7364);
 			YubicoResponse response = client.verify(otp);
 			showCloudDialog(response);
@@ -145,13 +151,14 @@ public class YubiKeyNEOActivity extends Activity {
 	}
 	
 	private void showCloudDialog(YubicoResponse response) {
+		// build a dialog from the cloud display view, displaying data from the YubiCloud response
 		AlertDialog.Builder alert = new AlertDialog.Builder(this);
-		// Set an EditText view to get user input
-		View input = View.inflate(this, R.layout.cloud_display, null);
+		View display = View.inflate(this, R.layout.cloud_display, null);
 
-		((TextView) input.findViewById(R.id.status1)).setText(response.getStatus().toString());
+		((TextView) display.findViewById(R.id.status1)).setText(response.getStatus().toString());
 		if(response.getOtp() != null) {
-			TextView otp_view = (TextView) input.findViewById(R.id.otp1);
+			TextView otp_view = (TextView) display.findViewById(R.id.otp1);
+			// if the OTP in the answer doesn't match the one we sent something fishy is going on
 			if(response.getOtp().equals(otp)) {
 				otp_view.setText(formatOTP(otp));
 			} else {
@@ -159,12 +166,14 @@ public class YubiKeyNEOActivity extends Activity {
 			}
 		}
 		if(response.getSessioncounter() != null) {
-			((TextView) input.findViewById(R.id.counter1)).setText(response.getSessioncounter());
+			// display the sessionCounter returned
+			((TextView) display.findViewById(R.id.counter1)).setText(response.getSessioncounter());
 		}
 		if(response.getSl() != null) {
-			((TextView) input.findViewById(R.id.sync1)).setText(response.getSl());
+			// display achieved sync percentage 
+			((TextView) display.findViewById(R.id.sync1)).setText(response.getSl() + "%");
 		}
-		alert.setView(input);
+		alert.setView(display);
 		alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog,
 					int whichButton) {
