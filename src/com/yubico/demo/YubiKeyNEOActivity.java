@@ -30,6 +30,10 @@ public class YubiKeyNEOActivity extends Activity {
 	private static final Pattern otpPattern = Pattern.compile("^.*([cbdefghijklnrtuv]{44})$");
 	private String otp = null;
 
+	private static final int COPY_TO_CLIPBOARD = 0;
+	private static final int SHOW_OTP = 1;
+	private static final int YUBIKEY_DEMO = 2;
+	private static final int YUBICLOUD_VERIFY = 3;
 	
     /** Called when the activity is first created. */
     @Override
@@ -76,10 +80,10 @@ public class YubiKeyNEOActivity extends Activity {
 			ContextMenuInfo menuInfo) {
 		menu.setHeaderTitle(R.string.otp_received);
 		menu.setHeaderIcon(R.drawable.yubikey);
-		menu.add(0, 0, 0, R.string.copy_to_clipboard);
-		menu.add(0, 1, 1, R.string.show_otp);
-		menu.add(0, 2, 2, R.string.yubikey_demo);
-		menu.add(0, 3, 3, R.string.yubicloud_verify);
+		menu.add(0, COPY_TO_CLIPBOARD, 0, R.string.copy_to_clipboard);
+		menu.add(0, SHOW_OTP, 1, R.string.show_otp);
+		menu.add(0, YUBIKEY_DEMO, 2, R.string.yubikey_demo);
+		menu.add(0, YUBICLOUD_VERIFY, 3, R.string.yubicloud_verify);
 		super.onCreateContextMenu(menu, v, menuInfo);
 	}
 	
@@ -88,21 +92,21 @@ public class YubiKeyNEOActivity extends Activity {
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
-		case 0:
+		case COPY_TO_CLIPBOARD:
 			ClipboardManager clipboard = (ClipboardManager) this.getSystemService(Context.CLIPBOARD_SERVICE);
 			clipboard.setText(otp);
 			Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show();
 			break;
-		case 1:
+		case SHOW_OTP:
 			showOTPDialog(otp);
 			break;
-		case 2:
+		case YUBIKEY_DEMO:
 			String url = "http://demo.yubico.com/php-yubico/one_factor.php?key=" + otp;
 			Intent i = new Intent(Intent.ACTION_VIEW);
 			i.setData(Uri.parse(url));
 			startActivity(i);
 			break;
-		case 3:
+		case YUBICLOUD_VERIFY:
 			YubicoClient client = YubicoClient.getClient(7364);
 			YubicoResponse response = client.verify(otp);
 			showCloudDialog(response);
