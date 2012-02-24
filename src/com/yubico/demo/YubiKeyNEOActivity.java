@@ -24,7 +24,6 @@ import android.widget.Toast;
 
 import com.yubico.client.v2.YubicoClient;
 import com.yubico.client.v2.YubicoResponse;
-import com.yubico.client.v2.YubicoResponseStatus;
 
 public class YubiKeyNEOActivity extends Activity {
 	private static final String logName = "YubiKeyNEOActivity";
@@ -106,15 +105,7 @@ public class YubiKeyNEOActivity extends Activity {
 		case 3:
 			YubicoClient client = YubicoClient.getClient(7364);
 			YubicoResponse response = client.verify(otp);
-			if(response.getStatus() == YubicoResponseStatus.OK) {
-				if(response.getOtp().equals(otp)) {
-					showCloudDialog(response);
-				} else {
-					Toast.makeText(this, R.string.otp_missmatch, Toast.LENGTH_LONG).show();
-				}
-			} else {
-				Toast.makeText(this, R.string.yubicloud_failed, Toast.LENGTH_LONG).show();
-			}
+			showCloudDialog(response);
 			break;
 		}
 		
@@ -127,10 +118,21 @@ public class YubiKeyNEOActivity extends Activity {
 		// Set an EditText view to get user input
 		View input = View.inflate(this, R.layout.cloud_display, null);
 
-		TextView otp_view = (TextView) input.findViewById(R.id.otp1);
-		otp_view.setText(formatOTP(response.getOtp()));
-		TextView counter1 = (TextView) input.findViewById(R.id.counter1);
-		counter1.setText(response.getSessioncounter());
+		((TextView) input.findViewById(R.id.status1)).setText(response.getStatus().toString());
+		if(response.getOtp() != null) {
+			TextView otp_view = (TextView) input.findViewById(R.id.otp1);
+			if(response.getOtp().equals(otp)) {
+				otp_view.setText(formatOTP(otp));
+			} else {
+				otp_view.setText(R.string.otp_missmatch);
+			}
+		}
+		if(response.getSessioncounter() != null) {
+			((TextView) input.findViewById(R.id.counter1)).setText(response.getSessioncounter());
+		}
+		if(response.getSl() != null) {
+			((TextView) input.findViewById(R.id.sync1)).setText(response.getSl());
+		}
 		alert.setView(input);
 		alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog,

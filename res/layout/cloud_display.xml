@@ -3,13 +3,23 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal" >
     <TextView
-        android:id="@+id/text1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:text="@string/yubicloud_ok"
+        android:text="@string/yubicloud_status"
+        android:layout_weight="1"
         android:textAppearance="?android:attr/textAppearanceLarge" />
+        <TextView
+        android:id="@+id/status1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+    </LinearLayout>
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
@@ -39,6 +49,23 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
         <TextView
             android:id="@+id/counter1"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal" >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/sync"
+            android:layout_weight="3"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+        <TextView
+            android:id="@+id/sync1"
             android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
