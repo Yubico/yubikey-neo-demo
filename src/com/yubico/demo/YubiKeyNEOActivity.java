@@ -81,7 +81,7 @@ public class YubiKeyNEOActivity extends Activity {
     	ndef.addDataScheme("http");
     	IntentFilter ndefHttps = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
     	ndef.addDataScheme("https");
-    	IntentFilter[] intentFiltersArray = new IntentFilter[] {ndef, };
+    	IntentFilter[] intentFiltersArray = new IntentFilter[] {ndef, ndefHttps};
     	NfcAdapter.getDefaultAdapter(this).enableForegroundDispatch(this, pendingIntent, intentFiltersArray, null);
     }
 
