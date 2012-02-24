@@ -12,7 +12,7 @@
     <string name="yubicloud_verify">Verify with YubiCloud</string>
     <string name="yubicloud_failed">OTP verification with YubiCloud failed</string>
     <string name="otp_missmatch">OTP returned is not the same as the one sent, man in the middle?</string>
-    <string name="yubicloud_status">YubiCloud verification:</string>
+    <string name="yubicloud_status">Status:</string>
     <string name="otp">OTP:</string>
     <string name="counter">counter:</string>
     <string name="sync">sync:</string>
