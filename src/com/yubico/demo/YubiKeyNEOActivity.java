@@ -67,14 +67,17 @@ public class YubiKeyNEOActivity extends Activity {
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
     }
     
     public void onPause() {
+        super.onPause();
         NfcAdapter.getDefaultAdapter(this).disableForegroundDispatch(this);
     }
 
     public void onResume() {
+        super.onResume();
     	PendingIntent pendingIntent = PendingIntent.getActivity(
     			this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
     	IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
