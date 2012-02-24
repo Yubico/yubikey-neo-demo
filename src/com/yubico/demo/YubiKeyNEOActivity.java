@@ -67,24 +67,21 @@ public class YubiKeyNEOActivity extends Activity {
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
     }
     
     public void onPause() {
-        super.onPause();
         NfcAdapter.getDefaultAdapter(this).disableForegroundDispatch(this);
     }
 
     public void onResume() {
-    	super.onResume();
     	PendingIntent pendingIntent = PendingIntent.getActivity(
     			this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
     	IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
     	ndef.addDataScheme("http");
     	IntentFilter ndefHttps = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
     	ndef.addDataScheme("https");
-    	IntentFilter[] intentFiltersArray = new IntentFilter[] {ndef, ndefHttps};
+    	IntentFilter[] intentFiltersArray = new IntentFilter[] {ndef, };
     	NfcAdapter.getDefaultAdapter(this).enableForegroundDispatch(this, pendingIntent, intentFiltersArray, null);
     }
 
@@ -113,7 +110,6 @@ public class YubiKeyNEOActivity extends Activity {
 		menu.add(0, SHOW_OTP, 1, R.string.show_otp);
 		menu.add(0, YUBIKEY_DEMO, 2, R.string.yubikey_demo);
 		menu.add(0, YUBICLOUD_VERIFY, 3, R.string.yubicloud_verify);
-		super.onCreateContextMenu(menu, v, menuInfo);
 	}
 	
 	
@@ -141,9 +137,7 @@ public class YubiKeyNEOActivity extends Activity {
 			showCloudDialog(response);
 			break;
 		}
-		
-		
-		return super.onContextItemSelected(item);
+		return false;
 	}
 	
 	private void showCloudDialog(YubicoResponse response) {
