@@ -90,7 +90,7 @@ public class YubiKeyNEOActivity extends Activity {
 
     public void onNewIntent(Intent intent) {
     	String data = intent.getDataString();
-        Log.e(logName, "data: " + data);
+        Log.d(logName, "data: " + data);
         Matcher matcher = otpPattern.matcher(data);
         if(matcher.matches()) {
         	otp = matcher.group(1);
