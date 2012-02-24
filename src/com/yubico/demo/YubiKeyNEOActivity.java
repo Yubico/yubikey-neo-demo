@@ -1,12 +1,7 @@
-package com.yubico;
+package com.yubico.demo;
 
-import java.net.ResponseCache;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.yubico.client.v2.YubicoClient;
-import com.yubico.client.v2.YubicoResponse;
-import com.yubico.client.v2.YubicoResponseStatus;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -26,6 +21,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.yubico.client.v2.YubicoClient;
+import com.yubico.client.v2.YubicoResponse;
+import com.yubico.client.v2.YubicoResponseStatus;
 
 public class YubiKeyNEOActivity extends Activity {
 	private static final String logName = "YubiKeyNEOActivity";
