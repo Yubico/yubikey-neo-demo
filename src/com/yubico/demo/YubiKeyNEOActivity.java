@@ -132,6 +132,7 @@ public class YubiKeyNEOActivity extends Activity {
 			String url = "http://demo.yubico.com/php-yubico/one_factor.php?key=" + otp;
 			Intent i = new Intent(Intent.ACTION_VIEW);
 			i.setData(Uri.parse(url));
+			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(i);
 			break;
 		case YUBICLOUD_VERIFY:
