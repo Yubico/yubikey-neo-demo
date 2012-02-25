@@ -47,6 +47,9 @@
 					<sdk>
 						<platform>10</platform>
 					</sdk>
+          <proguard>
+            <skip>false</skip>
+          </proguard>
 				</configuration>
 			</plugin>
 		</plugins>
