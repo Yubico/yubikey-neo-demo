@@ -164,12 +164,7 @@ public class YubiKeyNEOActivity extends Activity {
 		((TextView) display.findViewById(R.id.status1)).setText(response.getStatus().toString());
 		if(response.getOtp() != null) {
 			TextView otp_view = (TextView) display.findViewById(R.id.otp1);
-			// if the OTP in the answer doesn't match the one we sent something fishy is going on
-			if(response.getOtp().equals(otp)) {
-				otp_view.setText(formatOTP(otp));
-			} else {
-				otp_view.setText(R.string.otp_missmatch);
-			}
+			otp_view.setText(formatOTP(otp));
 		}
 		if(response.getSessioncounter() != null) {
 			// display the sessionCounter returned
