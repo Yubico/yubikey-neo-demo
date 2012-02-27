@@ -65,6 +65,10 @@ public class YubiKeyNEOActivity extends Activity {
 	private static final int YUBIKEY_DEMO = 2;
 	private static final int YUBICLOUD_VERIFY = 3;
 	
+	// client id and key from https://upgrade.yubico.com/getapikey/, get your own
+	private static final int CLIENT_ID = 7392;
+	private static final String CLIENT_KEY = "CQLkl27pz8dhtjAis5ErwTR2KoM=";
+	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -142,7 +146,9 @@ public class YubiKeyNEOActivity extends Activity {
 			startActivity(i);
 			break;
 		case YUBICLOUD_VERIFY: // do verification of the OTP to the YubiCloud platform directly
-			YubicoClient client = YubicoClient.getClient(7364);
+			YubicoClient client = YubicoClient.getClient(CLIENT_ID);
+			// key is used for signing and verifying request/response, you should use your own.
+			client.setKey(CLIENT_KEY);
 			YubicoResponse response = client.verify(otp);
 			showCloudDialog(response);
 			break;
