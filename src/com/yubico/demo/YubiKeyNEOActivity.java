@@ -53,6 +53,8 @@ import android.widget.Toast;
 
 import com.yubico.client.v2.YubicoClient;
 import com.yubico.client.v2.YubicoResponse;
+import com.yubico.client.v2.exceptions.YubicoValidationException;
+import com.yubico.client.v2.exceptions.YubicoValidationFailure;
 
 public class YubiKeyNEOActivity extends Activity {
 	private static final String logName = "YubiKeyNEOActivity";
@@ -149,8 +151,14 @@ public class YubiKeyNEOActivity extends Activity {
 			YubicoClient client = YubicoClient.getClient(CLIENT_ID);
 			// key is used for signing and verifying request/response, you should use your own.
 			client.setKey(CLIENT_KEY);
-			YubicoResponse response = client.verify(otp);
-			showCloudDialog(response);
+			try {
+				YubicoResponse response = client.verify(otp);
+				showCloudDialog(response);
+			} catch (YubicoValidationException e) {
+				Toast.makeText(this, "Validation failed: " + e.getMessage(), Toast.LENGTH_LONG);
+			} catch (YubicoValidationFailure e) {
+				Toast.makeText(this, "Failure in validating response: " + e.getMessage(), Toast.LENGTH_LONG);
+			}
 			break;
 		}
 		return false;
