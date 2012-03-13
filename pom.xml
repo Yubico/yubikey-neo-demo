@@ -8,6 +8,12 @@
 	<packaging>apk</packaging>
 	<name>YubiKey NEO demo</name>
 
+  <scm>
+    <url>scm:git:git://github.com/Yubico/yubikey-neo-demo.git</url>
+    <connection>scm:git:git://github.com/Yubico/yubikey-neo-demo.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/Yubico/yubikey-neo-demo.git</developerConnection>
+  </scm>
+
 	<dependencies>
 		<dependency>
 			<groupId>com.google.android</groupId>
