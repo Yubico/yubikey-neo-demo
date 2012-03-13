@@ -42,8 +42,17 @@
 					<artifactId>android-maven-plugin</artifactId>
 					<version>3.1.1</version>
 					<extensions>true</extensions>
-				</plugin>
-			</plugins>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>2.2.2</version>
+          <configuration>
+            <localCheckout>true</localCheckout>
+            <pushChanges>false</pushChanges>
+          </configuration>
+        </plugin>
+      </plugins>
 		</pluginManagement>
 		<plugins>
 			<plugin>
