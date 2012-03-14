@@ -1,0 +1,12 @@
+To make a new release of this code:
+
+* edit AndroidManifest.xml and bump versionCode and remove -SNAPSHOT from versionName. commit.
+* do mvn3 release:prepare and answer the version questions
+* do mvn3 release:clean
+* edit AndroidManifest.xml and bump versionCode and set versionName to the new -SNAPSHOT version. commit.
+* do git push && git push --tags
+* checkout the tag just made by release:prepare
+* do mvn3 package -Psign
+* sign the apk with jarsigner
+* do zipaligning: zipalign -v 4 YubiKeyNEO.apk YubiKeyNEO-align.apk
+* apk is ready for distribution
