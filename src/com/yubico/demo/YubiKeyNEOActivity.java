@@ -91,11 +91,10 @@ public class YubiKeyNEOActivity extends Activity {
     	// register for all NDEF tags starting with http och https
     	IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
     	ndef.addDataScheme("http");
-    	IntentFilter ndefHttps = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
     	ndef.addDataScheme("https");
     	// register for foreground dispatch so we'll receive tags according to our intent filters
     	NfcAdapter.getDefaultAdapter(this).enableForegroundDispatch(
-    			this, pendingIntent, new IntentFilter[] {ndef, ndefHttps}, null);
+    			this, pendingIntent, new IntentFilter[] {ndef}, null);
     }
 
     public void onNewIntent(Intent intent) {
