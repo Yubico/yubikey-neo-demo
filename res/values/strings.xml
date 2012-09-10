@@ -10,7 +10,6 @@
     <string name="ok">OK</string>
     <string name="yubikey_demo">Yubico demo site</string>
     <string name="yubicloud_verify">Verify with YubiCloud</string>
-    <string name="yubicloud_failed">OTP verification with YubiCloud failed</string>
     <string name="yubicloud_status">Status:</string>
     <string name="otp">OTP:</string>
     <string name="counter">counter:</string>
