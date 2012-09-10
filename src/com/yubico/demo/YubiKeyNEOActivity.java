@@ -154,9 +154,9 @@ public class YubiKeyNEOActivity extends Activity {
 				YubicoResponse response = client.verify(otp);
 				showCloudDialog(response);
 			} catch (YubicoValidationException e) {
-				Toast.makeText(this, "Validation failed: " + e.getMessage(), Toast.LENGTH_LONG);
+				Toast.makeText(this, "Validation failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
 			} catch (YubicoValidationFailure e) {
-				Toast.makeText(this, "Failure in validating response: " + e.getMessage(), Toast.LENGTH_LONG);
+				Toast.makeText(this, "Failure in validating response: " + e.getMessage(), Toast.LENGTH_LONG).show();
 			}
 			break;
 		}
