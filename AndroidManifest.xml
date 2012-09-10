@@ -21,6 +21,11 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+              <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
+              <category android:name="android.intent.category.DEFAULT"/>
+              <data android:scheme="https" android:host="my.yubico.com"/>
+            </intent-filter>
         </activity>
     </application>
 </manifest>

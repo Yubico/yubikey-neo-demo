@@ -76,6 +76,13 @@ public class YubiKeyNEOActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        
+		Bundle extras = getIntent().getExtras();
+		if(extras != null && extras.containsKey("otp")) {
+			otp = extras.getString("otp");
+			Log.d(logName, "received otp '" + otp + "' from extras.");
+			handleOTP();
+		}
     }
     
     public void onPause() {
@@ -95,6 +102,17 @@ public class YubiKeyNEOActivity extends Activity {
     	// register for foreground dispatch so we'll receive tags according to our intent filters
     	NfcAdapter.getDefaultAdapter(this).enableForegroundDispatch(
     			this, pendingIntent, new IntentFilter[] {ndef}, null);
+        
+    	String data = getIntent().getDataString();
+        if(data != null) {
+        	Matcher otpMatch = otpPattern.matcher(data);
+        	if(otpMatch.matches()) {
+        		otp = otpMatch.group(1);
+        		handleOTP();
+        	} else {
+        		Log.i(logName, "data from ndef didn't match, it was: " + data);
+        	}
+        }
     }
 
     public void onNewIntent(Intent intent) {
@@ -105,15 +123,21 @@ public class YubiKeyNEOActivity extends Activity {
         if(matcher.matches()) {
         	// if the otp matched our regex open up a contextmenu
         	otp = matcher.group(1);
-        	View view = findViewById(R.id.text1);
-        	registerForContextMenu(view);
-        	this.openContextMenu(view);
+        	handleOTP();
         } else {
-        	Toast.makeText(this, R.string.no_neo, Toast.LENGTH_SHORT);
+        	Toast.makeText(this, R.string.no_neo, Toast.LENGTH_SHORT).show();
         }
     }
     
-    
+    private void handleOTP() {
+    	findViewById(R.id.text1).post(new Runnable() {
+			public void run() {
+				View view = findViewById(R.id.text1);
+		    	registerForContextMenu(view);
+		    	YubiKeyNEOActivity.this.openContextMenu(view);
+			}
+		});
+    }
     
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
