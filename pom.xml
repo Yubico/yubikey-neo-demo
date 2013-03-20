@@ -39,7 +39,7 @@
 				<plugin>
 					<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 					<artifactId>android-maven-plugin</artifactId>
-					<version>3.1.1</version>
+					<version>3.5.0</version>
 					<extensions>true</extensions>
         </plugin>
         <plugin>
@@ -47,6 +47,7 @@
           <artifactId>maven-release-plugin</artifactId>
           <version>2.2.2</version>
           <configuration>
+            <goals>package</goals>
             <localCheckout>true</localCheckout>
             <pushChanges>false</pushChanges>
           </configuration>
@@ -70,7 +71,13 @@
 	</build>
   <profiles>
     <profile>
-      <id>sign</id>
+      <id>release</id>
+      <activation>
+        <property>
+          <name>performRelease</name>
+          <value>true</value>
+        </property>
+      </activation>
       <build>
         <plugins>
           <plugin>
@@ -81,6 +88,9 @@
               <sign>
                 <debug>false</debug>
               </sign>
+              <zipalign>
+                <skip>true</skip>
+              </zipalign>
             </configuration>
           </plugin>
         </plugins>
