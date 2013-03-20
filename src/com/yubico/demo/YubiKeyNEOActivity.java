@@ -164,7 +164,7 @@ public class YubiKeyNEOActivity extends Activity {
 			showOTPDialog(otp);
 			break;
 		case YUBIKEY_DEMO: // start an intent for the browser with the yubico demo site + the OTP
-			String url = "http://demo.yubico.com/php-yubico/one_factor.php?key=" + otp;
+			String url = "https://my.yubico.com/neo/" + otp;
 			Intent i = new Intent(Intent.ACTION_VIEW);
 			i.setData(Uri.parse(url));
 			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
