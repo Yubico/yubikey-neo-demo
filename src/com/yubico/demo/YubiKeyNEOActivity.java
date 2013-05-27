@@ -59,7 +59,7 @@ import com.yubico.client.v2.exceptions.YubicoValidationFailure;
 public class YubiKeyNEOActivity extends Activity {
 	private static final String logName = "YubiKeyNEOActivity";
 	// compile a pattern that matches a 44 characters modhex at the end of the tag
-	private static final Pattern otpPattern = Pattern.compile("^.*([cbdefghijklnrtuv]{44})$");
+	private static final Pattern otpPattern = Pattern.compile("^.*?([cbdefghijklnrtuv]{32,64})$");
 	private String otp = null;
 
 	private static final int COPY_TO_CLIPBOARD = 0;
